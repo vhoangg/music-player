@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -6,8 +5,7 @@ import { FreeMode } from 'swiper';
 
 import PlayPause from './PlayPause';
 import { playPause, setActiveSong } from '../redux/features/playerSlice';
-import { useGetTopChartsQuery } from '../redux/services/shazamCore';
-import { Error, Loader, SongCard } from '../components';
+import { useGetSongsByGenreQuery } from '../redux/services/shazamCore';
 
 import 'swiper/css';
 import 'swiper/css/free-mode';
@@ -40,14 +38,12 @@ const TopChartCard = ({ song, i, isPlaying, activeSong, handlePauseClick, handle
 const TopPlay = () => {
     const dispatch = useDispatch();
     const { activeSong, isPlaying } = useSelector((state) => state.player);
-    const { data } = useGetTopChartsQuery();
-    const divRef = useRef(null);
 
-    useEffect(() => {
-        divRef.current.scrollIntoView({ behavior: 'smooth' });
-    });
+    const { data, isFetching } = useGetSongsByGenreQuery('genre-global-chart-2');
 
-    const topPlays = data?.tracks?.slice(6, 11);
+    if (isFetching) return;
+
+    const topPlays = data?.tracks?.slice(0, 5);
     const handlePauseClick = () => {
         dispatch(playPause(false));
     };
@@ -58,7 +54,7 @@ const TopPlay = () => {
     };
 
     return (
-        <div ref={divRef} className="xl:ml-6 ml-0 xl:mb-0 mb-6 flex-1 xl:max-w-[500px] max-w-full flex flex-col">
+        <div className="xl:ml-6 ml-0 xl:mb-0 mb-6 flex-1 xl:max-w-[500px] max-w-full flex flex-col">
             <div className="w-full flex flex-col">
                 <div className="flex flex-row justify-between items-center">
                     <h2 className="text-white font-bold text-2xl">Top Charts</h2>
