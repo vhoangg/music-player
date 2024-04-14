@@ -18,7 +18,12 @@ const SongDetails = () => {
 
     if (error) return <Error />;
 
-    console.log(songData);
+    const songInfo = songData?.resources['shazam-songs'][songid];
+
+    const songLyrics = songData?.resources?.lyrics[Object.keys(songData?.resources?.lyrics)[0]]?.attributes?.text;
+
+    const relatedSongs = Object.values(data?.resources['shazam-songs']);
+
     const handlePauseClick = () => {
         dispatch(playPause(false));
     };
@@ -28,18 +33,16 @@ const SongDetails = () => {
         dispatch(playPause(true));
     };
 
-    console.log(data);
-
     return (
         <div className="flex flex-col">
-            <DetailsHeader artistId="" songData={songData} />
+            <DetailsHeader artistId="" songData={songInfo} />
 
             <div className="mb-10">
                 <h2 className="text-white text-3xl font-bold">Lyrics: </h2>
 
                 <div className="mt-5">
-                    {songData?.sections[1].type === 'LYRICS' ? (
-                        songData?.sections[1].text.map((line, i) => (
+                    {songLyrics ? (
+                        songLyrics.map((line, i) => (
                             <p className="text-gray-400 text-base my-1" key={i}>
                                 {line}
                             </p>
@@ -51,7 +54,7 @@ const SongDetails = () => {
             </div>
 
             <RelatedSongs
-                data={data}
+                data={relatedSongs}
                 isPlaying={isPlaying}
                 activeSong={activeSong}
                 handlePauseClick={handlePauseClick}

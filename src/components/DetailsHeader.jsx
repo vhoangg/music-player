@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 
 const DetailsHeader = ({ artistId, artistData, songData }) => {
-    // const artistData = artistData ||
     return (
         <div className="relative w-full flex flex-col">
             <div className="w-full bg-gradient-to-l from-transparent to-black sm:h-48 h-28" />
@@ -11,7 +10,7 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
                     src={
                         artistId
                             ? artistData?.attributes?.artwork?.url.replace('{w}', '500').replace('{h}', '500')
-                            : songData?.images?.coverart
+                            : songData?.attributes?.images?.coverArt
                     }
                     alt="art"
                     className="sm:w-48 w-28 sm:h-48 h-28 rounded-full object-cover border-2 shadow-xl shadow-black"
@@ -19,16 +18,16 @@ const DetailsHeader = ({ artistId, artistData, songData }) => {
 
                 <div className="ml-5">
                     <p className="text-white font-bold text-xl sm:text-3xl">
-                        {artistId ? artistData?.attributes?.name : songData?.title}
+                        {artistId ? artistData?.attributes?.name : songData?.attributes?.title}
                     </p>
                     {!artistId && (
-                        <Link to={`/artists/${songData?.artists[0]?.adamid}`}>
-                            <p className="text-base text-gray-400 mt-2">{songData?.subtitle}</p>
+                        <Link to={`/artists/${songData?.relationships?.artists?.data[0]?.id}`}>
+                            <p className="text-base text-gray-400 mt-2">{songData?.attributes?.artist}</p>
                         </Link>
                     )}
 
                     <p className="text-base text-gray-400 mt-2">
-                        {artistId ? artistData?.attributes?.genreNames : songData?.genres?.primary}
+                        {artistId ? artistData?.attributes?.genreNames : songData?.attributes?.genres?.primary}
                     </p>
                 </div>
             </div>

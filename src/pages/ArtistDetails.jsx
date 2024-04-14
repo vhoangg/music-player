@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { DetailsHeader, Error, Loader, RelatedSongs } from '../components';
 
-import { useGetArtistDetailsQuery } from '../redux/services/shazamCore';
+import { useGetArtistDetailsQuery, useGetArtistTopSongsQuery } from '../redux/services/shazamCore';
 
 const ArtistDetails = () => {
     const { id: artistId } = useParams();
@@ -10,7 +10,9 @@ const ArtistDetails = () => {
 
     const { data, isFetching: isFetchingArtistDetails, error } = useGetArtistDetailsQuery(artistId);
 
-    if (isFetchingArtistDetails) return <Loader title="Loading artist details..." />;
+    const { data: artistSongs, isFetching } = useGetArtistTopSongsQuery(artistId);
+
+    if (isFetchingArtistDetails || isFetching) return <Loader title="Loading artist details..." />;
 
     if (error) return <Error />;
 
@@ -20,12 +22,7 @@ const ArtistDetails = () => {
         <div className="flex flex-col">
             <DetailsHeader artistId={artistId} artistData={artistData} />
 
-            {/* <RelatedSongs
-                data={Object.values(artistData?.song)}
-                artistId={artistId}
-                isPlaying={isPlaying}
-                activeSong={activeSong}
-            /> */}
+            <RelatedSongs data={artistSongs?.data} artistId={artistId} isPlaying={isPlaying} activeSong={activeSong} />
         </div>
     );
 };

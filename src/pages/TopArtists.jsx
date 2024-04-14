@@ -1,8 +1,8 @@
 import { Error, Loader, ArtistCard } from '../components';
-import { useGetTopChartsQuery } from '../redux/services/shazamCore';
+import { useGetSongsByGenreQuery } from '../redux/services/shazamCore';
 
 const TopArtists = () => {
-    const { data, isFetching, error } = useGetTopChartsQuery();
+    const { data, isFetching, error } = useGetSongsByGenreQuery('genre-global-chart-2');
 
     if (isFetching) return <Loader title="Loading top Artists" />;
 
